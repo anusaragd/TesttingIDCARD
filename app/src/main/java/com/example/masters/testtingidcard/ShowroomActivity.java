@@ -30,19 +30,18 @@ import java.util.HashMap;
 
 public class ShowroomActivity extends Activity {
 
-    TextView showname , id_customer;
-    Button Create ;
+    TextView showname, id_customer;
+    Button Create;
 
     ListView Listshow;
     ArrayAdapter<String> adapter;
 
     private final String NAMESPACE = "http://tempuri.org/";
-    private final String URL = "http://10.0.0.36/webservice/WebService1.asmx?op=Register_Room"; // WSDL URL
+    private final String URL = "http://10.0.0.36/webservice/WebService1.asmx/Register_Room"; // WSDL URL
     private final String SOAP_ACTION = "http://tempuri.org/Register_Room";
     private final String METHOD_NAME = "Register_Room"; // Method on web service
 
     ArrayList<HashMap<String, String>> MyArrList;
-
 
 
     @Override
@@ -56,7 +55,7 @@ public class ShowroomActivity extends Activity {
             StrictMode.setThreadPolicy(policy);
         }
 
-        ShowData();
+//        ShowData();
 
         showname = (TextView) findViewById(R.id.username);
         showname.setText(user.username);
@@ -77,93 +76,108 @@ public class ShowroomActivity extends Activity {
 //            }
 //        });
 
-        Create = (Button)findViewById(R.id.create_button);
+        Create = (Button) findViewById(R.id.create_button);
         Create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(ShowroomActivity.this,LoginIDCardActivity.class);
+                Intent intent = new Intent(ShowroomActivity.this, LoginIDCardActivity.class);
                 startActivity(intent);
 
             }
         });
-    }
 
-    public void ShowData()
-    {
-        // listView1
-        final ListView lisView = (ListView)findViewById(R.id.listview_room);
+        Listshow = (ListView) findViewById(R.id.listview_room);
+//        Listshow.setAdapter(adapter);
+        Listshow.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-        // keySearch
-        TextView strKeySearch = (TextView)findViewById(R.id.idview);
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Toast.makeText(getApplicationContext(), Listshow.getItemAtPosition(position).toString(),
+                        Toast.LENGTH_SHORT).show();
 
-        // Disbled Keyboard auto focus
-        InputMethodManager imm = (InputMethodManager)getSystemService(
-                Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(lisView.getWindowToken(), 0);
-
-
-        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-        request.addProperty("strName", strKeySearch.getText().toString());
-
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
-                SoapEnvelope.VER11);
-
-        envelope.setOutputSoapObject(request);
-
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-
-
-        try {
-
-            androidHttpTransport.call(SOAP_ACTION, envelope);
-            SoapObject result = (SoapObject) envelope.bodyIn;
-
-            if (result != null) {
-
-                /**
-                 * [{"MemberID":"1","Username":"weerachai","Password":"weerachai@1","Name":"Weerachai Nukitram","Tel":"0819876107","Email":"weerachai@thaicreate.com"},
-                 * {"MemberID":"2","Username":"adisorn","Password":"adisorn@2","Name":"Adisorn Bunsong","Tel":"021978032","Email":"adisorn@thaicreate.com"},
-                 * {"MemberID":"3","Username":"surachai","Password":"surachai@3","Name":"Surachai Sirisart","Tel":"0876543210","Email":"surachai@thaicreate.com"}]
-                 */
-
-                MyArrList = new ArrayList<HashMap<String, String>>();
-                HashMap<String, String> map;
-
-                JSONArray data = new JSONArray(result.getProperty(0).toString());
-
-                for(int i = 0; i < data.length(); i++){
-                    JSONObject c = data.getJSONObject(i);
-
-                    map = new HashMap<String, String>();
-                    map.put("MemberID", c.getString("MemberID"));
-                    map.put("Username", c.getString("Username"));
-                    map.put("Password", c.getString("Password"));
-                    map.put("Name", c.getString("Name"));
-                    map.put("Email", c.getString("Email"));
-                    map.put("Tel", c.getString("Tel"));
-                    MyArrList.add(map);
-                }
-
-//                lisView1.setAdapter(new ImageAdapter(this));
-
-
-            } else {
-                Toast.makeText(getApplicationContext(),
-                        "Web Service not Response!", Toast.LENGTH_LONG)
-                        .show();
+                Intent intent = new Intent(ShowroomActivity.this,MainActivity.class);
+                startActivity(intent);
             }
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (XmlPullParserException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (JSONException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+        });
     }
+
+//    public void ShowData()
+//    {
+//        // listView1
+//        final ListView lisView = (ListView)findViewById(R.id.listview_room);
+//
+//        // keySearch
+//        TextView strKeySearch = (TextView)findViewById(R.id.idview);
+//
+//        // Disbled Keyboard auto focus
+//        InputMethodManager imm = (InputMethodManager)getSystemService(
+//                Context.INPUT_METHOD_SERVICE);
+//        imm.hideSoftInputFromWindow(lisView.getWindowToken(), 0);
+//
+//
+//        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+//        request.addProperty("strName", strKeySearch.getText().toString());
+//
+//        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(
+//                SoapEnvelope.VER11);
+//
+//        envelope.setOutputSoapObject(request);
+//
+//        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+//
+//
+//        try {
+//
+//            androidHttpTransport.call(SOAP_ACTION, envelope);
+//            SoapObject result = (SoapObject) envelope.bodyIn;
+//
+//            if (result != null) {
+//
+//                /**
+//                 * [{"MemberID":"1","Username":"weerachai","Password":"weerachai@1","Name":"Weerachai Nukitram","Tel":"0819876107","Email":"weerachai@thaicreate.com"},
+//                 * {"MemberID":"2","Username":"adisorn","Password":"adisorn@2","Name":"Adisorn Bunsong","Tel":"021978032","Email":"adisorn@thaicreate.com"},
+//                 * {"MemberID":"3","Username":"surachai","Password":"surachai@3","Name":"Surachai Sirisart","Tel":"0876543210","Email":"surachai@thaicreate.com"}]
+//                 */
+//
+//                MyArrList = new ArrayList<HashMap<String, String>>();
+//                HashMap<String, String> map;
+//
+//                JSONArray data = new JSONArray(result.getProperty(0).toString());
+//
+//                for(int i = 0; i < data.length(); i++){
+//                    JSONObject c = data.getJSONObject(i);
+//
+//                    map = new HashMap<String, String>();
+//                    map.put("Description", c.getString("Description"));
+////                    map.put("Username", c.getString("Username"));
+////                    map.put("Password", c.getString("Password"));
+////                    map.put("Name", c.getString("Name"));
+////                    map.put("Email", c.getString("Email"));
+////                    map.put("Tel", c.getString("Tel"));
+//                    MyArrList.add(map);
+//                }
+//
+////                lisView1.setAdapter(new ImageAdapter(this));
+//
+//
+//            } else {
+//                Toast.makeText(getApplicationContext(),
+//                        "Web Service not Response!", Toast.LENGTH_LONG)
+//                        .show();
+//            }
+//
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (XmlPullParserException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        } catch (JSONException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+
+//    }
 }
