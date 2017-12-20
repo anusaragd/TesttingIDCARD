@@ -38,7 +38,6 @@ public class LoginIDCardActivity extends Activity {
             EditText Password = (EditText)findViewById(R.id.password);
 
 
-
             @Override
             public void run(){
 
@@ -51,12 +50,9 @@ public class LoginIDCardActivity extends Activity {
                 String SOAP_ACTION = "http://tempuri.org/Login";
 
 
-
                 SoapObject request = new SoapObject(NAMESPACE,METHOD_NAME);
                 request.addProperty("USR",Username.getText().toString());
                 request.addProperty("PWD",Password.getText().toString());
-
-
 
 
                 SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -93,4 +89,6 @@ public class LoginIDCardActivity extends Activity {
 
         nt.start();
     }
+
+
 }
