@@ -95,14 +95,14 @@ public class LoginIDCardActivity extends Activity {
 
         //Pass value for userName variable of the web service
         PropertyInfo unameProp = new PropertyInfo();
-        unameProp.setName("userName");
+        unameProp.setName("USER_NAME");
         unameProp.setValue(user_Name);
         unameProp.setType(String.class);
         request.addProperty(unameProp);
 
         //Pass value for Password variable of the web service
         PropertyInfo passwordProp = new PropertyInfo();
-        passwordProp.setName("password");
+        passwordProp.setName("PASSWORD");
         passwordProp.setValue(user_Password);
         passwordProp.setType(String.class);
         request.addProperty(passwordProp);

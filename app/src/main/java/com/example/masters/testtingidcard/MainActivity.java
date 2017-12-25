@@ -322,7 +322,7 @@ public class MainActivity extends Activity {
         IntentFilter filter = new IntentFilter();
         filter.addAction(ACTION_USB_PERMISSION);
         filter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
-        registerReceiver(mReceiver, filter);
+//        registerReceiver(mReceiver, filter);
 
         // Initialize textViewReader
         textViewReader = (TextView) findViewById(R.id.textViewReader);
