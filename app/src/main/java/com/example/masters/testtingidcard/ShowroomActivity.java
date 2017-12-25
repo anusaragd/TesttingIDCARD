@@ -58,7 +58,7 @@ public class ShowroomActivity extends Activity {
 //        ShowData();
 
         showname = (TextView) findViewById(R.id.username);
-        showname.setText(user.username);
+//        showname.setText(user.username);
 
 //        id_customer = (TextView)findViewById(R.id.idview);
 //        id_customer.setText(ID_Customer);
