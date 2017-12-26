@@ -3,6 +3,7 @@ package com.example.masters.testtingidcard;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +31,13 @@ public class LoginIDCardActivity extends Activity {
     EditText Username, Password;
     Button Login;
     TextView show;
+
+    private String str_CID = null;
+    private String imgBase64String = "";
+    private String str_DOB = null;
+    private String strIssue=null;
+    private String strExpire=null;
+    private Bitmap bitmapCard=null;
 
 
 //    String URL = "http://203.151.213.80/webservice/WebService1.asmx?";
@@ -86,50 +94,81 @@ public class LoginIDCardActivity extends Activity {
 
     }
     private void loginAction(){
+        int cnt = 0;
+        String strResponse="";
+
+        String URL =  "http://10.0.0.43/webservice/WebService1.asmx";
+        String NAMESPACE = "http://tempuri.org/";
+        String METHOD_NAME = "RegisterEnroll";
+        String SOAP_ACTION = "http://tempuri.org/RegisterEnroll/";
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 
-        EditText userName = (EditText) findViewById(R.id.username);
-        String user_Name = userName.getText().toString();
-        EditText userPassword = (EditText) findViewById(R.id.password);
-        String user_Password = userPassword.getText().toString();
+        /**** with parameter *****/
+        PropertyInfo pi;
 
-        //Pass value for userName variable of the web service
-        PropertyInfo unameProp = new PropertyInfo();
-        unameProp.setName("USER_NAME");
-        unameProp.setValue(user_Name);
-        unameProp.setType(String.class);
-        request.addProperty(unameProp);
 
-        //Pass value for Password variable of the web service
-        PropertyInfo passwordProp = new PropertyInfo();
-        passwordProp.setName("PASSWORD");
-        passwordProp.setValue(user_Password);
-        passwordProp.setType(String.class);
-        request.addProperty(passwordProp);
+        //CID
+        String strCardID = str_CID;
+        pi=new PropertyInfo();
+        pi.setName("ID_Card");
+        pi.setValue(strCardID);
+        pi.setType(String.class);
+        request.addProperty(pi);
+        //ShowMsg(strCardID);
 
-        final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.setOutputSoapObject(request);
-        final HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+        //ID_Room
+        String ID_Room = "123456";
+        pi=new PropertyInfo();
+        pi.setName("ID_Room");
+        pi.setValue(ID_Room);
+        pi.setType(String.class);
+        request.addProperty(pi);
+        //ShowMsg(ID_Room);
 
-//        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+//        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+//
+//        EditText userName = (EditText) findViewById(R.id.username);
+//        String user_Name = userName.getText().toString();
+//        EditText userPassword = (EditText) findViewById(R.id.password);
+//        String user_Password = userPassword.getText().toString();
+//
+//        //Pass value for userName variable of the web service
+//        PropertyInfo unameProp = new PropertyInfo();
+//        unameProp.setName("USER_NAME");
+//        unameProp.setValue(user_Name);
+//        unameProp.setType(String.class);
+//        request.addProperty(unameProp);
+//
+//        //Pass value for Password variable of the web service
+//        PropertyInfo passwordProp = new PropertyInfo();
+//        passwordProp.setName("PASSWORD");
+//        passwordProp.setValue(user_Password);
+//        passwordProp.setType(String.class);
+//        request.addProperty(passwordProp);
+//
+//        final SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
 //        envelope.setOutputSoapObject(request);
-//        androidHttpTransport = new HttpTransportSE(URL);
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    androidHttpTransport.call(SOAP_ACTION, envelope);
-                    SoapPrimitive response = (SoapPrimitive)envelope.getResponse();
-                    
-                    TextView result = (TextView)findViewById(R.id.textView3);
-                    result.setText(response.toString());
-                }
-                catch (Exception e){
-                    
-                }
-            }
-        });
+//        final HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+//
+////        envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+////        envelope.setOutputSoapObject(request);
+////        androidHttpTransport = new HttpTransportSE(URL);
+//
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    androidHttpTransport.call(SOAP_ACTION, envelope);
+//                    SoapPrimitive response = (SoapPrimitive)envelope.getResponse();
+//
+//                    TextView result = (TextView)findViewById(R.id.textView3);
+//                    result.setText(response.toString());
+//                }
+//                catch (Exception e){
+//
+//                }
+//            }
+//        });
 
     }
 
