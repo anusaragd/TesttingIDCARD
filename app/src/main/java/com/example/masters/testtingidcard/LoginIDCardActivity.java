@@ -2,11 +2,9 @@ package com.example.masters.testtingidcard;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,15 +14,15 @@ import android.widget.Toast;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
-import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import static android.os.Build.ID;
-import static com.example.masters.testtingidcard.user.username;
+import static com.example.masters.testtingidcard.MainActivity.MAX_LINES;
+
 
 public class LoginIDCardActivity extends Activity {
 
@@ -32,12 +30,12 @@ public class LoginIDCardActivity extends Activity {
     Button Login;
     TextView show;
 
-    private String str_CID = null;
-    private String imgBase64String = "";
-    private String str_DOB = null;
-    private String strIssue=null;
-    private String strExpire=null;
-    private Bitmap bitmapCard=null;
+//    private String str_CID = null;
+//    private String imgBase64String = "";
+//    private String str_DOB = null;
+//    private String strIssue=null;
+//    private String strExpire=null;
+//    private Bitmap bitmapCard=null;
 
 
 //    String URL = "http://203.151.213.80/webservice/WebService1.asmx?";
@@ -53,6 +51,23 @@ public class LoginIDCardActivity extends Activity {
     /** Called when the activity is first created. */
 
 
+    private void logMsg(String msg){
+
+//        DateFormat dateFormat = new SimpleDateFormat("[dd-MM-yyyy HH:mm:ss]: ");
+//        Date date = new Date();
+//        String oldMsg = show.getText().toString();
+
+//        show.setText(oldMsg + "\n" + dateFormat.format(date) + msg);
+        show.setText("ture");
+
+        if (show.getLineCount() > MAX_LINES) {
+            show.scrollTo(0,
+                    (show.getLineCount() - MAX_LINES)
+                            * show.getLineHeight());
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +75,7 @@ public class LoginIDCardActivity extends Activity {
 
         Username = (EditText) findViewById(R.id.username);
         Password = (EditText) findViewById(R.id.password);
-        show = (TextView) findViewById(R.id.textView3);
+//        show = (TextView) findViewById(R.id.textView3);
 
         Login = (Button) findViewById(R.id.button);
         Login.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +86,12 @@ public class LoginIDCardActivity extends Activity {
             }
         });
 //        Username.getText().toString();
+
+        // Initialize response text view
+        show = (TextView) findViewById(R.id.textView3);
+        show.setMovementMethod(new ScrollingMovementMethod());
+        show.setMaxLines(MAX_LINES);
+        show.setText("");
 
     }
 
@@ -93,14 +114,14 @@ public class LoginIDCardActivity extends Activity {
         }
 
     }
-    private void loginAction(){
+    private String loginAction(){
         int cnt = 0;
         String strResponse="";
 
         String URL =  "http://10.0.0.43/webservice/WebService1.asmx";
         String NAMESPACE = "http://tempuri.org/";
-        String METHOD_NAME = "RegisterEnroll";
-        String SOAP_ACTION = "http://tempuri.org/RegisterEnroll/";
+        String METHOD_NAME = "Login";
+        String SOAP_ACTION = "http://tempuri.org/Login";
         SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
 
         /**** with parameter *****/
@@ -108,19 +129,20 @@ public class LoginIDCardActivity extends Activity {
 
 
         //CID
-        String strCardID = str_CID;
+        String user = Username.toString();
         pi=new PropertyInfo();
-        pi.setName("ID_Card");
-        pi.setValue(strCardID);
+        pi.setName("USER_NAME");
+        pi.setValue(user);
         pi.setType(String.class);
         request.addProperty(pi);
         //ShowMsg(strCardID);
 
         //ID_Room
-        String ID_Room = "123456";
+//        String ID_Room = "123456";
+        String pass = Password.toString();
         pi=new PropertyInfo();
-        pi.setName("ID_Room");
-        pi.setValue(ID_Room);
+        pi.setName("PASSWORD");
+        pi.setValue(pass);
         pi.setType(String.class);
         request.addProperty(pi);
         //ShowMsg(ID_Room);
@@ -170,7 +192,34 @@ public class LoginIDCardActivity extends Activity {
 //            }
 //        });
 
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(request);
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+        androidHttpTransport.debug = true;
+        try
+        {
+            androidHttpTransport.call(SOAP_ACTION, envelope);
+            SoapObject response;
+            response= (SoapObject) envelope.bodyIn;
+            strResponse = response.getProperty(0).toString();
+        }
+        catch (Exception e)
+        {
+            //e.printStackTrace();
+            strResponse = e.toString();
+        }
+
+//        logMsg(strResponse);
+        Toast.makeText(LoginIDCardActivity.this,strResponse, Toast.LENGTH_SHORT).show();
+
+        return strResponse;
+
     }
+
+
+
+//    }
 
 
 //    class CallWebService extends AsyncTask <String,Void,String>{

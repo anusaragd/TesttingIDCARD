@@ -79,7 +79,7 @@ public class MainActivity extends Activity {
     private Reader mReader;
     private PendingIntent mPermissionIntent;
 
-    private static final int MAX_LINES = 25;
+    static final int MAX_LINES = 25;
     private TextView mResponseTextView;
     private ArrayAdapter<String> mReaderAdapter;
 
@@ -846,7 +846,7 @@ public class MainActivity extends Activity {
         int cnt = 0;
         String strResponse="";
 
-        String URL =  "http://10.0.0.43/webservice/WebService1.asmx";
+        String URL =  "http://203.151.213.80/webservice/WebService1.asmx";
         String NAMESPACE = "http://tempuri.org/";
         String METHOD_NAME = "RegisterEnroll";
         String SOAP_ACTION = "http://tempuri.org/RegisterEnroll/";
