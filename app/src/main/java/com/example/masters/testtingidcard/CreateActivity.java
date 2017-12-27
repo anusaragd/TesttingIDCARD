@@ -35,14 +35,39 @@ public class CreateActivity extends AppCompatActivity {
 
 
     EditText nameroome;
+    Button mSave;
+
+    private String CustomerID = null;
+    private String varTitleTH="";
     //    MultiAutoCompleteTextView description;
-    ArrayAdapter<String> adapter;
-    String username, description;
+//    ArrayAdapter<String> adapter;
+//    String username, description;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
+        mSave = (Button) findViewById(R.id.create_button);
+        mSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    UploadPictureViaWebservice();
+                } catch (Exception ex) {
+                    Toast.makeText(CreateActivity.this,"OOOOO",Toast.LENGTH_SHORT).show();
+//                    logMsg(ex.toString());
+                }
+
+            }
+        });
+
+        nameroome = (EditText) findViewById(R.id.Room_name);
+        nameroome.getText().toString();
+
+//        varTitleTH = nameroome.toString();
+
+    }
 
 //        nameroome = (EditText)findViewById(R.id.Room_name);
 //        nameroome.getText();
@@ -60,7 +85,79 @@ public class CreateActivity extends AppCompatActivity {
 //        });
 //
 
+//    }
+
+    public String UploadPictureViaWebservice() {
+
+        int cnt = 0;
+        String strResponse="";
+
+        String URL =  "http://203.151.213.80/webservice/WebService1.asmx";
+        String NAMESPACE = "http://tempuri.org/";
+        String METHOD_NAME = "Register_Room";
+        String SOAP_ACTION = "http://tempuri.org/Register_Room";
+        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+
+        /**** with parameter *****/
+        PropertyInfo pi;
+
+
+        //CID
+        String CustomerID = "UserTest";
+        pi=new PropertyInfo();
+        pi.setName("Customer_ID");
+        pi.setValue(CustomerID);
+        pi.setType(String.class);
+        request.addProperty(pi);
+        //ShowMsg(strCardID);
+
+        //ID_Room
+        String ID_Room = "123456";
+        pi=new PropertyInfo();
+        pi.setName("ID_Room");
+        pi.setValue(ID_Room);
+        pi.setType(String.class);
+        request.addProperty(pi);
+        //ShowMsg(ID_Room);
+
+        //Description
+        String Description = nameroome.getText().toString();
+        pi=new PropertyInfo();
+        pi.setName("Description");
+        pi.setValue(Description);
+        pi.setType(String.class);
+        request.addProperty(pi);
+        //ShowMsg(Name_Title_TH);
+
+        /*************************/
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+        envelope.dotNet = true;
+        envelope.setOutputSoapObject(request);
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+        androidHttpTransport.debug = true;
+        try
+        {
+            androidHttpTransport.call(SOAP_ACTION, envelope);
+            SoapObject response;
+            response= (SoapObject) envelope.bodyIn;
+            strResponse = response.getProperty(0).toString();
+        }
+        catch (Exception e)
+        {
+            //e.printStackTrace();
+            strResponse = e.toString();
+        }
+
+//        logMsg(strResponse);
+        Toast.makeText(CreateActivity.this,"OOOOO",Toast.LENGTH_SHORT).show();
+
+        Toast.makeText(CreateActivity.this,strResponse, Toast.LENGTH_SHORT).show();
+
+        return strResponse;
+
     }
+
 
 //    private void logMsg(String msg){
 //
@@ -78,10 +175,10 @@ public class CreateActivity extends AppCompatActivity {
 //        }
 //    }
 
-    public void createOnClick(){
-        nameroome = (EditText)findViewById(R.id.Room_name);
-        nameroome.getText().toString();
-        UploadPictureViaWebservice();
+//    public void createOnClick(){
+//        nameroome = (EditText)findViewById(R.id.Room_name);
+//        nameroome.getText().toString();
+//        UploadPictureViaWebservice();
 //        try
 //        {
 //            UploadPictureViaWebservice();
@@ -159,193 +256,193 @@ public class CreateActivity extends AppCompatActivity {
 //
 //    }
 
-    private String User = user.username;
+//    private String User = user.username;
 //    private String Room_name = nameroome.toString() ;
 
 
-    public String UploadPictureViaWebservice() {
-
-        int cnt = 0;
-        String strResponse="";
-
-        String URL =  "http://10.0.0.43/webservice/WebService1.asmx";
-        String NAMESPACE = "http://tempuri.org/";
-        String METHOD_NAME = "Register_Room";
-        String SOAP_ACTION = "http://tempuri.org/Register_Room/";
-        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
-
-        /**** with parameter *****/
-        PropertyInfo pi;
-
-
-        //CID
-        String strCardID = User;
-        pi=new PropertyInfo();
-        pi.setName("ID_Customer");
-        pi.setValue(strCardID);
-        pi.setType(String.class);
-        request.addProperty(pi);
-        //ShowMsg(strCardID);
-
-        //ID_Room
-        String ID_Room = nameroome.toString();
-        pi=new PropertyInfo();
-        pi.setName("Description");
-        pi.setValue(ID_Room);
-        pi.setType(String.class);
-        request.addProperty(pi);
-        //ShowMsg(ID_Room);
-
-//        //Name_Title_TH
-//        String Name_Title_TH = varTitleTH;
+//    public String UploadPictureViaWebservice() {
+//
+//        int cnt = 0;
+//        String strResponse="";
+//
+//        String URL =  "http://203.151.213.80/webservice/WebService1.asmx";
+//        String NAMESPACE = "http://tempuri.org/";
+//        String METHOD_NAME = "Register_Room";
+//        String SOAP_ACTION = "http://tempuri.org/Register_Room/";
+//        SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME);
+//
+//        /**** with parameter *****/
+//        PropertyInfo pi;
+//
+//
+//        //CID
+//        String strCardID = "UserTest";
 //        pi=new PropertyInfo();
-//        pi.setName("Name_Title_TH");
-//        pi.setValue(Name_Title_TH);
+//        pi.setName("ID_Customer");
+//        pi.setValue(strCardID);
 //        pi.setType(String.class);
 //        request.addProperty(pi);
-//        //ShowMsg(Name_Title_TH);
+//        //ShowMsg(strCardID);
 //
-//        //Name_Title_EN
-//        String Name_Title_EN = varTitleEN;
+//        //ID_Room
+//        String ID_Room = nameroome.toString();
 //        pi=new PropertyInfo();
-//        pi.setName("Name_Title_EN");
-//        pi.setValue(Name_Title_EN);
+//        pi.setName("Description");
+//        pi.setValue(ID_Room);
 //        pi.setType(String.class);
 //        request.addProperty(pi);
-//        //ShowMsg(Name_Title_EN);
+//        //ShowMsg(ID_Room);
 //
-//        //Name_TH
-//        String Name_TH = varFNTH;
-//        pi=new PropertyInfo();
-//        pi.setName("Name_TH");
-//        pi.setValue(Name_TH);
-//        pi.setType(String.class);
-//        request.addProperty(pi);
-//        //ShowMsg(Name_TH);
-//
-//        //LastName_TH  ****
-//        String LastName_TH = varLNTH.replace(" ","").replace("\n","");
-//        String LastName_TH_tmp = ConvStringToHex(LastName_TH);
-//        LastName_TH_tmp = LastName_TH_tmp.substring(0, LastName_TH_tmp.indexOf("900"));
-//        cnt = LastName_TH_tmp.length()/3;
-//        LastName_TH = LastName_TH.substring(0,cnt);
-//        pi=new PropertyInfo();
-//        pi.setName("LastName_TH");
-//        pi.setValue(LastName_TH);
-//        pi.setType(String.class);
-//        request.addProperty(pi);
-//        //ShowMsg(LastName_TH);
-//
-//        //Name_EN
-//        String Name_EN = varFNEN;
-//        pi=new PropertyInfo();
-//        pi.setName("Name_EN");
-//        pi.setValue(Name_EN);
-//        pi.setType(String.class);
-//        request.addProperty(pi);
-//        //ShowMsg(Name_EN);
-//
-//        //LastName_EN ****
-//        String LastName_EN = varLNEN.replace(" ","").replace("\n","");
-//        String LastName_EN_tmp = ConvStringToHex(LastName_EN);
-//        LastName_EN_tmp = LastName_EN_tmp.substring(0, LastName_EN_tmp.indexOf("900"));
-//        cnt = LastName_EN_tmp.length() / 2;
-//        LastName_EN = LastName_EN.substring(0,cnt);
-//        pi=new PropertyInfo();
-//        pi.setName("LastName_EN");
-//        pi.setValue(LastName_EN);
-//        pi.setType(String.class);
-//        request.addProperty(pi);
-//        //ShowMsg(LastName_EN);
-//
-//
-//        if (varAddress==""){
-//            //
-//        }else{
-//            varAddress = varAddress.replace("#"," ");
-//            varAddress = varAddress.substring(0, varAddress.indexOf("@"));
-//            varAddress = varAddress.replaceAll("\\s+", " ");
-//            varAddress = varAddress.replace("\\0","").replace("\0","");
-//        }
-//        pi=new PropertyInfo();
-//        pi.setName("Address");
-//        pi.setValue(varAddress);
-//        pi.setType(String.class);
-//        request.addProperty(pi);
-//        //ShowMsg(varAddress);
-//
-//
-//        //Gender
-//        if (varGender=="ชาย"){
-//            varGender = "0";
-//        }else {
-//            varGender = "1";
-//        }
-//        pi=new PropertyInfo();
-//        pi.setName("Gender");
-//        pi.setValue(varGender);
-//        pi.setType(String.class);
-//        request.addProperty(pi);
-//        //ShowMsg(varGender);
-//
-//
-//        //Date_Of_Birth
-//        pi=new PropertyInfo();
-//        pi.setName("Date_Of_Birth");
-//        pi.setValue(str_DOB);
-//        pi.setType(String.class);
-//        request.addProperty(pi);
-//        //ShowMsg(str_DOB);
-//
-//        //Date_Of_Issue
-//        pi=new PropertyInfo();
-//        pi.setName("Date_Of_Issue");
-//        pi.setValue(strIssue);
-//        pi.setType(String.class);
-//        request.addProperty(pi);
-//        //ShowMsg(strIssue);
-//
-//        //Date_Of_Expiry
-//        pi=new PropertyInfo();
-//        pi.setName("Date_Of_Expiry");
-//        pi.setValue(strExpire);
-//        pi.setType(String.class);
-//        request.addProperty(pi);
-//        //ShowMsg(strExpire);
-//
-//
-////        //Imagebase64
+////        //Name_Title_TH
+////        String Name_Title_TH = varTitleTH;
 ////        pi=new PropertyInfo();
-////        pi.setName("Imagebase64");
-////        pi.setValue(imgBase64String);
+////        pi.setName("Name_Title_TH");
+////        pi.setValue(Name_Title_TH);
 ////        pi.setType(String.class);
 ////        request.addProperty(pi);
-////        //ShowMsg(imgBase64String);
-
-        /*************************/
-
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
-        envelope.dotNet = true;
-        envelope.setOutputSoapObject(request);
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
-        androidHttpTransport.debug = true;
-        try
-        {
-            androidHttpTransport.call(SOAP_ACTION, envelope);
-            SoapObject response;
-            response= (SoapObject) envelope.bodyIn;
-            strResponse = response.getProperty(0).toString();
-        }
-        catch (Exception e)
-        {
-            //e.printStackTrace();
-            strResponse = e.toString();
-        }
-
-//        logMsg(strResponse);
-        Toast.makeText(CreateActivity.this,strResponse, Toast.LENGTH_SHORT).show();
-
-        return strResponse;
-
-    }
-}
+////        //ShowMsg(Name_Title_TH);
+////
+////        //Name_Title_EN
+////        String Name_Title_EN = varTitleEN;
+////        pi=new PropertyInfo();
+////        pi.setName("Name_Title_EN");
+////        pi.setValue(Name_Title_EN);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(Name_Title_EN);
+////
+////        //Name_TH
+////        String Name_TH = varFNTH;
+////        pi=new PropertyInfo();
+////        pi.setName("Name_TH");
+////        pi.setValue(Name_TH);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(Name_TH);
+////
+////        //LastName_TH  ****
+////        String LastName_TH = varLNTH.replace(" ","").replace("\n","");
+////        String LastName_TH_tmp = ConvStringToHex(LastName_TH);
+////        LastName_TH_tmp = LastName_TH_tmp.substring(0, LastName_TH_tmp.indexOf("900"));
+////        cnt = LastName_TH_tmp.length()/3;
+////        LastName_TH = LastName_TH.substring(0,cnt);
+////        pi=new PropertyInfo();
+////        pi.setName("LastName_TH");
+////        pi.setValue(LastName_TH);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(LastName_TH);
+////
+////        //Name_EN
+////        String Name_EN = varFNEN;
+////        pi=new PropertyInfo();
+////        pi.setName("Name_EN");
+////        pi.setValue(Name_EN);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(Name_EN);
+////
+////        //LastName_EN ****
+////        String LastName_EN = varLNEN.replace(" ","").replace("\n","");
+////        String LastName_EN_tmp = ConvStringToHex(LastName_EN);
+////        LastName_EN_tmp = LastName_EN_tmp.substring(0, LastName_EN_tmp.indexOf("900"));
+////        cnt = LastName_EN_tmp.length() / 2;
+////        LastName_EN = LastName_EN.substring(0,cnt);
+////        pi=new PropertyInfo();
+////        pi.setName("LastName_EN");
+////        pi.setValue(LastName_EN);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(LastName_EN);
+////
+////
+////        if (varAddress==""){
+////            //
+////        }else{
+////            varAddress = varAddress.replace("#"," ");
+////            varAddress = varAddress.substring(0, varAddress.indexOf("@"));
+////            varAddress = varAddress.replaceAll("\\s+", " ");
+////            varAddress = varAddress.replace("\\0","").replace("\0","");
+////        }
+////        pi=new PropertyInfo();
+////        pi.setName("Address");
+////        pi.setValue(varAddress);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(varAddress);
+////
+////
+////        //Gender
+////        if (varGender=="ชาย"){
+////            varGender = "0";
+////        }else {
+////            varGender = "1";
+////        }
+////        pi=new PropertyInfo();
+////        pi.setName("Gender");
+////        pi.setValue(varGender);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(varGender);
+////
+////
+////        //Date_Of_Birth
+////        pi=new PropertyInfo();
+////        pi.setName("Date_Of_Birth");
+////        pi.setValue(str_DOB);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(str_DOB);
+////
+////        //Date_Of_Issue
+////        pi=new PropertyInfo();
+////        pi.setName("Date_Of_Issue");
+////        pi.setValue(strIssue);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(strIssue);
+////
+////        //Date_Of_Expiry
+////        pi=new PropertyInfo();
+////        pi.setName("Date_Of_Expiry");
+////        pi.setValue(strExpire);
+////        pi.setType(String.class);
+////        request.addProperty(pi);
+////        //ShowMsg(strExpire);
+////
+////
+//////        //Imagebase64
+//////        pi=new PropertyInfo();
+//////        pi.setName("Imagebase64");
+//////        pi.setValue(imgBase64String);
+//////        pi.setType(String.class);
+//////        request.addProperty(pi);
+//////        //ShowMsg(imgBase64String);
+//
+//        /*************************/
+//
+//        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER12);
+//        envelope.dotNet = true;
+//        envelope.setOutputSoapObject(request);
+//        HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
+//        androidHttpTransport.debug = true;
+//        try
+//        {
+//            androidHttpTransport.call(SOAP_ACTION, envelope);
+//            SoapObject response;
+//            response= (SoapObject) envelope.bodyIn;
+//            strResponse = response.getProperty(0).toString();
+//        }
+//        catch (Exception e)
+//        {
+//            //e.printStackTrace();
+//            strResponse = e.toString();
+//        }
+//
+////        logMsg(strResponse);
+//        Toast.makeText(CreateActivity.this,strResponse, Toast.LENGTH_SHORT).show();
+//
+//        return strResponse;
+//
+//    }
+//}
